@@ -1,0 +1,22 @@
+name: Docker Compose Check
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Compose
+        uses: docker/compose-cli@v1
+        with:
+          version: '3'
+
+      - name: Validate Docker Compose
+        run: docker compose config --quiet
