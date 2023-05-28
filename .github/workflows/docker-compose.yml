@@ -4,18 +4,20 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker Compose
-        uses: docker/compose-action@v2
+      - name: Check Docker Compose file
+        run: |
+          docker-compose config -q
 
-      - name: Validate Docker Compose
-        run: docker-compose config --quiet
 
