@@ -2,6 +2,11 @@
 
 Конфигурация из 3-ёх контейнеров Cassandra, каждый из них в кластере будет доступен через порт 9042 и будет знать о других узлах в качестве сидов.
 
+![image](https://github.com/DeFomin/test-docker-compose/assets/90705279/0f3eecc1-fdf6-412a-81fd-de4175c5e307)
+
+![image](https://github.com/DeFomin/test-docker-compose/assets/90705279/ffaf50e2-40ad-4f67-8492-64d90bb2a9bd)
+
+
 1. В 'services' определяем сервисы (контейнеры) для развертывания. cassandra1, cassandra2, cassandra3 - имена сервисов, каждый из которых соответствует одному из узлов кластера Cassandra.
 2. 'image: cassandra:latest' определяет образ Docker, который будет использоваться для создания контейнеров Cassandra. В данном случае последняя доступная версия
 3. 'container_name' определяет имена контейнеров
