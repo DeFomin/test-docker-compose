@@ -1,31 +1,102 @@
-version: '3'
+version: '3.1'
 services:
   cassandra1:
     image: cassandra:latest
-    container_name: cassandra1
+    container_name: NodeCassandra1
+    hostname: cassandra1
     ports:
       - "9042:9042"
+    expose:
+        - 7000 # внутренней порт (обмен информацией о состоянии кластера с другими узлами)/протокол Gossip
+        - 7001 # внутренний порт/протокол Gossip через TLS (защищенный)
+        - 7199 # порт для подключения к сервису JMX (мониторинг и управление экземплярами cassandra)
+        - 9042 # порт для внешнего доступа извне через CQL
+        - 9142 # порт для протокола CQL SSL
     environment:
-      - CASSANDRA_SEEDS=cassandra1,cassandra2,cassandra3
+      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_CLUSTER_NAME=MyCluster
     networks:
-      - cassandra-network
+      cassandra_net:
+        ipv4_address: 172.18.0.2
+    healthcheck: # Проверка состояния (доступности) контейнера; Интервал между проверками/время ожидания ответа/число попыток
+          test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
+          interval: 10s
+          timeout: 5s
+          retries: 3
+    ulimits:
+      memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 
   cassandra2:
     image: cassandra:latest
-    container_name: cassandra2
+    container_name: NodeCassandra2
+    hostname: cassandra2
     environment:
-      - CASSANDRA_SEEDS=cassandra1,cassandra2,cassandra3
+      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+    ports:
+      - "9043:9042"
+    expose:
+        - 7000
+        - 7001
+        - 7199
+        - 9042
+        - 9142
     networks:
-      - cassandra-network
+      cassandra_net:
+        ipv4_address: 172.18.0.3
+    depends_on:
+       - cassandra1
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ulimits:
+      memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 
   cassandra3:
     image: cassandra:latest
-    container_name: cassandra3
+    container_name: NodeCassandra3
+    hostname: cassandra3
     environment:
-      - CASSANDRA_SEEDS=cassandra1,cassandra2,cassandra3
+      - CASSANDRA_SEEDS=cassandra1, cassandra2
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+    ports:
+      - "9044:9042"
+    expose:
+        - 7000
+        - 7001
+        - 7199
+        - 9042
+        - 9142
     networks:
-      - cassandra-network
-
+      cassandra_net:
+        ipv4_address: 172.18.0.4
+    depends_on:
+       - cassandra1
+       - cassandra2
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    ulimits:
+      memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 networks:
-  cassandra-network:
-    driver: bridge
+  cassandra_net:
+      driver: bridge
+      ipam:
+        config:
+          - subnet: 172.18.0.0/16
