@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 services:
   cassandra1:
     image: cassandra:latest
@@ -18,13 +18,12 @@ services:
     networks:
       cassandra_net:
         ipv4_address: 172.18.0.2
-    healthcheck: # Проверка состояния (доступности) контейнера; Интервал между проверками/время ожидания ответа/число попыток
-          test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
-          interval: 10s
-          timeout: 5s
-          retries: 3
     ulimits:
       memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 
   cassandra2:
     image: cassandra:latest
@@ -46,13 +45,12 @@ services:
         ipv4_address: 172.18.0.3
     depends_on:
        - cassandra1
-    healthcheck:
-      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
     ulimits:
       memlock: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 
   cassandra3:
     image: cassandra:latest
@@ -75,14 +73,12 @@ services:
     depends_on:
        - cassandra1
        - cassandra2
-    healthcheck:
-      test: ["CMD", "cqlsh", "-e", "DESCRIBE KEYSPACES;"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
     ulimits:
       memlock: -1
-
+    deploy:
+      resources:
+        limits:
+          memory: 4G
 networks:
   cassandra_net:
       driver: bridge
