@@ -20,7 +20,7 @@ services:
         ipv4_address: 172.18.0.2
     ulimits:
       memlock: -1
-      nproc: 32768
+      nproc: 32768 # max количество процессов в контейнере
     deploy:
       resources:
         limits:
