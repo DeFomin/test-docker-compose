@@ -1,0 +1,18 @@
+# /etc/netplan/
+# sudo netplan apply
+
+# dhcp4: no
+network: #  Определение секции настройки сети
+  version: 2
+  renderer: networkd #  Указывает использование сетевого рендерера NetworkManager (в данном случае, NetworkManager daemon)
+  ethernets: # Определение секции настройки для Ethernet-интерфейсов # ipconfig
+    enp3s0: # : Имя Ethernet-интерфейса
+      addresses:
+        - 192.168.XXX.XXX/24 # Задает IP-адрес и маску подсети для интерфейса
+      nameservers: # Определение DNS-серверов для интерфейса
+        search: [mydomain, otherdomain] # Указывает список доменных имен для поиска при разрешении DNS-имен
+        addresses: [8.8.8.8, 8.8.4.4] # Задает IP-адреса DNS-серверов для использования
+      routes: # Определение маршрута по умолчанию для интерфейса
+        - to: default
+          via: 192.168.XXX.XXX # Задает IP-адрес шлюза для отправки пакетов по умолчанию
+
