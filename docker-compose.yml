@@ -17,7 +17,7 @@ services:
       - CASSANDRA_CLUSTER_NAME=MyCluster
     networks:
       cassandra_net:
-        ipv4_address: 172.18.0.2
+        ipv4_address: 192.168.0.2
     ulimits:
       memlock: -1
       nproc: 32768 # max количество процессов в контейнере
@@ -44,7 +44,7 @@ services:
         - 9142
     networks:
       cassandra_net:
-        ipv4_address: 172.18.0.3
+        ipv4_address: 192.168.0.3
     depends_on:
        - cassandra1
     ulimits:
@@ -73,7 +73,7 @@ services:
         - 9142
     networks:
       cassandra_net:
-        ipv4_address: 172.18.0.4
+        ipv4_address: 192.168.0.4
     depends_on:
        - cassandra1
        - cassandra2
@@ -85,9 +85,10 @@ services:
         limits:
           memory: 4G
           cpus: '0.5'
+# создание виртуальной сети
 networks:
   cassandra_net:
       driver: bridge
       ipam:
         config:
-          - subnet: 172.18.0.0/16
+          - subnet: 192.168.0.0/24
