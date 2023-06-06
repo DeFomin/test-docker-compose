@@ -1,22 +1,22 @@
 # Основные команды для работы с docker compose
 
-Запуск контейнеров ```shell docker-compose up -d ```
+Запуск контейнеров ```docker-compose up -d ```
 
-Остановка контейнеров ```shell docker-compose up -d ```
+Остановка контейнеров ```docker-compose up -d ```
 
-Проверка состояния ```shell docker ps -a ```
+Проверка состояния ```docker ps -a ```
 
-Очистка сети ```shell docker network prune``` (failed to create network cassandra-cluster_dc1ring: Error response from daemon: Pool overlaps with other one on this address space ) 
+Очистка сети ```docker network prune``` (failed to create network cassandra-cluster_dc1ring: Error response from daemon: Pool overlaps with other one on this address space ) 
 
-Проверка подключения netcat ```shell nc -vz 172.18.0.3 9042 ```
+Проверка подключения netcat ```nc -vz 172.18.0.3 9042 ```
 
-telnet ```shell telnet 172.18.0.3 9042```
+telnet ```telnet 172.18.0.3 9042```
 
-Проверка занят ли какой-то определенный порт ```shell sudo lsof -i :9042```
+Проверка занят ли какой-то определенный порт ```sudo lsof -i :9042```. Дроп - ```kill {number}```
 
-Если требуется удалить все остановленные контейнеры и неиспользуемые образы ```shell docker system prune -a```
+Если требуется удалить все остановленные контейнеры и неиспользуемые образы ```docker system prune -a```
 
-Остановить все Docker контейнеры ```shell docker stop $(docker ps -a -q) ``` Опция –q (–quiet) — дает возможно узнавать  идентификаторы самих контейнеров с утилитой ps
+Остановить все Docker контейнеры ```docker stop $(docker ps -a -q) ``` Опция –q (–quiet) — дает возможно узнавать  идентификаторы самих контейнеров с утилитой ps
 
 
-Удалить все Docker контейнеры ```shell docker rm $(docker ps -a -q) ```
+Удалить все Docker контейнеры ```docker rm $(docker ps -a -q) ```
