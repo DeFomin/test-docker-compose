@@ -15,6 +15,19 @@ services:
     environment:
       - CASSANDRA_SEEDS=cassandra1
       - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3 # количество токенов, которые будет иметь данный узел/ токен -это числовое значение, которое используется для разделения и распределения данных по узлам кластера.
+      # Если все узлы кластера запускаются на одной машине с использованием docker-compose, то достаточно установить одно и то же имя DC
+      # Имя центра данных (data center), к которому принадлежит данный узел/для правильной настройки репликации данных и обеспечения согласованности и доступности данных в кластере
+      - DC=DC1
+      - DS_LICENSE=accept # Подтверждение лицензионного соглашения DataStax
+      - RACK=RAC1 # имя стойки (rack), в которой находится данный узел/ Стойка - это логическая группировка узлов в кластере Cassandra
+      # --- параметры настройки памяти для Java Virtual Machine (JVM), на которой работает Cassandra
+      - MAX_HEAP_SIZE=1G # размер максимальной heap size/ область памяти, используемая для хранения объектов и выполнения операций в Java
+      # Новое поколение - это часть кучи, где создаются и сначала размещаются объекты в Java-приложении.
+      # Затем, при необходимости, объекты могут быть перемещены в другую часть кучи, называемую старым поколением
+      - HEAP_NEWSIZE=200M # указывает размер new generation heap
+      # ---
+      - START_RPC=false  # Отключение RPC-сервиса Cassandra/ удаленный доступ между узлами кластера и клиентскими приложениями
     networks:
       cassandra_net:
         ipv4_address: 192.168.0.2
@@ -32,8 +45,15 @@ services:
     container_name: NodeCassandra2
     hostname: cassandra2
     environment:
-      - CASSANDRA_SEEDS=cassandra1
+      - CASSANDRA_SEEDS=cassandra1,cassandra2
       - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3
+      - DC=DC2
+      - DS_LICENSE=accept
+      - RACK=RAC1
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=200M
+      - START_RPC=false
     ports:
       - "9043:9042"
     expose:
@@ -61,8 +81,15 @@ services:
     container_name: NodeCassandra3
     hostname: cassandra3
     environment:
-      - CASSANDRA_SEEDS=cassandra1, cassandra2
+      - CASSANDRA_SEEDS=cassandra1,cassandra2
       - CASSANDRA_CLUSTER_NAME=MyCluster
+      - NUM_TOKENS=3
+      - DC=DC2
+      - DS_LICENSE=accept
+      - RACK=RAC1
+      - MAX_HEAP_SIZE=1G
+      - HEAP_NEWSIZE=200M
+      - START_RPC=false
     ports:
       - "9044:9042"
     expose:
@@ -85,7 +112,6 @@ services:
         limits:
           memory: 4G
           cpus: '0.5'
-# создание виртуальной сети
 networks:
   cassandra_net:
       driver: bridge
