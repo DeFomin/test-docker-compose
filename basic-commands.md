@@ -2,7 +2,7 @@
 
 Запуск контейнеров ```docker-compose up -d ```
 
-Остановка контейнеров ```docker-compose up -d ```
+Остановка контейнеров ```docker-compose stop ```
 
 Проверка состояния ```docker ps -a ```
 
