@@ -8,6 +8,8 @@
 
 Проверка сети ```docker network ls```
 
+IPadress ```docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' NodeCassandra2``` | ```docker container inspect <container_id> | grep "IPAdress"```
+
 Очистка сети ```docker network prune``` (failed to create network cassandra-cluster_dc1ring: Error response from daemon: Pool overlaps with other one on this address space ) 
 
 Проверка подключения netcat ```nc -vz 172.18.0.3 9042 ```
