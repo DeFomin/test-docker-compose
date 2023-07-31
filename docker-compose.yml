@@ -114,7 +114,12 @@ services:
           cpus: '0.5'
 networks:
   cassandra_net:
-      driver: bridge
-      ipam:
-        config:
-          - subnet: 192.168.0.0/24
+    driver: macvlan
+    driver_opts:
+      parent: wlp0s20f3
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.0.0/24
+          gateway: 192.168.0.1
+
